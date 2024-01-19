@@ -1,11 +1,8 @@
-const semver = require('semver');
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const util = require('node:util');
 
-/**
- * Expose `bumpy`
- */
+const semver = require('semver');
 
 module.exports = bumpy;
 
@@ -15,57 +12,57 @@ module.exports = bumpy;
  * @api public
  * @param {String} dir
  * @param {String} release
- * @param {Function} cb
  */
-
-function bumpy(dir, release, cb) {
+async function bumpy(dir, release) {
   let current;
 
-  function next(index) {
-    let file = bumpy.files[index];
-    if (!file) return cb(null, current);
-    file = path.join(dir, file);
+  const result = await Promise.allSettled(bumpy.files.map(read));
+  const changes = result.filter(check).map(inc);
+  await Promise.all(changes.map(write));
 
-    fs.readFile(file, 'utf-8', function (err, data) {
-      if (err) {
-        // don't error on missing files
-        if ('ENOENT' === err.code) return next(index + 1);
-        return cb(err);
-      }
+  return current;
 
-      let json = null;
-      try {
-        json = JSON.parse(data);
-      } catch (err) {
-        return cb(err);
-      }
-
-      const version = json.version;
-      const bumped = semver.inc(version, release);
-
-      if (!current) {
-        current = bumped;
-      } else if (current !== bumped) {
-        return cb({
-          message: util.format(
-            'Inconsistent versions:\n%s\t%s\n%s\tin other files',
-            bumped,
-            file,
-            current
-          )
-        });
-      }
-
-      json.version = bumped;
-      const str = JSON.stringify(json, null, 2);
-      fs.writeFile(file, str, function (err) {
-        if (err) return cb(err);
-        next(index + 1);
-      });
-    });
+  function check({ reason }) {
+    // no reason - means file was read OK
+    if (!reason) return true;
+    // missing files are OK but lets filter them out
+    if ('ENOENT' === reason.code) return false;
+    // everything else is a problem
+    throw reason;
   }
 
-  next(0);
+  function inc({ value }) {
+    const { file, json } = value;
+    const bumped = semver.inc(json.version, release);
+    if (!current) {
+      current = bumped;
+    } else if (current !== bumped) {
+      const message = util.format(
+        'Inconsistent versions:\n%s\t%s\n%s\tin other files',
+        bumped,
+        file,
+        current
+      );
+      throw new Error(message);
+    }
+    json.version = bumped;
+    return value;
+  }
+
+  async function read(name) {
+    const file = path.join(dir, name);
+    const data = await fs.readFile(file, 'utf-8');
+    const json = JSON.parse(data);
+    return {
+      file,
+      json
+    };
+  }
+
+  async function write({ file, json }) {
+    const str = JSON.stringify(json, null, 2);
+    await fs.writeFile(file, str);
+  }
 }
 
 /**

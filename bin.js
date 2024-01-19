@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const { directory: home } = require('home-dir');
+
 const bumpy = require('./bumpy');
-const path = require('path');
-const home = require('home-dir').directory;
-const fs = require('fs');
 
 const releases = ['major', 'minor', 'patch'];
 const release = process.argv[2];
@@ -11,9 +12,11 @@ const ignore = '--ignorerc' === process.argv[3] || '-i' === process.argv[3];
 
 process.title = 'bumpy';
 
-main();
+main()
+  .then(bumped => console.log(bumped))
+  .catch(err => error(err.message));
 
-function main() {
+async function main() {
   if ('--help' === release || '-h' === release) return usage();
   if ('--version' === release || '-v' === release) return version();
 
@@ -30,7 +33,7 @@ function main() {
   if (!ignore) {
     try {
       const rc = path.join(home, '.bumpyrc');
-      const data = fs.readFileSync(rc);
+      const data = await fs.readFile(rc);
       const json = JSON.parse(data);
       const files = json.files;
       if (files && files.length) {
@@ -42,12 +45,9 @@ function main() {
       }
     }
   }
+  return bumpy(process.cwd(), release);
 }
 
-bumpy(process.cwd(), release, function (err, version) {
-  if (err) return error(err.message);
-  if (version) console.log(version);
-});
 
 /**
  * Output the given error `msg`
