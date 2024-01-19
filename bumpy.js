@@ -52,15 +52,20 @@ async function bumpy(dir, release) {
   async function read(name) {
     const file = path.join(dir, name);
     const data = await fs.readFile(file, 'utf-8');
+    const suffix = data.match(/([\r\n]+)$/gm);
     const json = JSON.parse(data);
     return {
       file,
-      json
+      json,
+      suffix: suffix?.[0]
     };
   }
 
-  async function write({ file, json }) {
-    const str = JSON.stringify(json, null, 2);
+  async function write({ file, json, suffix }) {
+    let str = JSON.stringify(json, null, 2);
+    if (suffix) {
+      str += suffix;
+    }
     await fs.writeFile(file, str);
   }
 }
