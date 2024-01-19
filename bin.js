@@ -3,6 +3,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { directory: home } = require('home-dir');
+const semver = require('semver');
 
 const bumpy = require('./bumpy');
 
@@ -12,21 +13,28 @@ const ignore = '--ignorerc' === process.argv[3] || '-i' === process.argv[3];
 
 process.title = 'bumpy';
 
-main()
+main(release)
   .then(bumped => console.log(bumped))
   .catch(err => error(err.message));
 
-async function main() {
+async function main(release) {
   if ('--help' === release || '-h' === release) return usage();
   if ('--version' === release || '-v' === release) return version();
 
-  if (!~releases.indexOf(release)) {
-    return error(
-      [
-        'Invalid or missing release.  Must be one of the following:',
-        '  ' + releases.join(', ')
-      ].join('\n')
-    );
+  let overwrite;
+  if (!releases.includes(release)) {
+    // check if valid release number
+    if (!semver.valid(release)) {
+      return error(
+        [
+          'Invalid or missing release.  Must be one of the following:',
+          '  ' + releases.join(', '),
+          'Or a valid version number.'
+        ].join('\n')
+      );
+    }
+    overwrite = release;
+    release = false;
   }
 
   // config file support
@@ -45,7 +53,7 @@ async function main() {
       }
     }
   }
-  return bumpy(process.cwd(), release);
+  return bumpy(process.cwd(), release, overwrite);
 }
 
 

@@ -13,7 +13,7 @@ module.exports = bumpy;
  * @param {String} dir
  * @param {String} release
  */
-async function bumpy(dir, release) {
+async function bumpy(dir, release, overwrite) {
   let current;
 
   const result = await Promise.allSettled(bumpy.files.map(read));
@@ -33,7 +33,7 @@ async function bumpy(dir, release) {
 
   function inc({ value }) {
     const { file, json } = value;
-    const bumped = semver.inc(json.version, release);
+    const bumped = release ? semver.inc(json.version, release) : overwrite;
     if (!current) {
       current = bumped;
     } else if (current !== bumped) {

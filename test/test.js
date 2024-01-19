@@ -41,6 +41,12 @@ describe('bumpy', async function () {
     assert.equal(version('package.json'), '1.0.0');
   });
 
+  await it('should allow overwriting version number', async function () {
+    await bumpy(fixture(), false, '4.2.1');
+    assert.equal(version('component.json'), '4.2.1');
+    assert.equal(version('package.json'), '4.2.1');
+  });
+
   await it('should allow for clobbering defaults files', async function () {
     bumpy.files.push('foo.json');
     await bumpy(fixture(), 'major');

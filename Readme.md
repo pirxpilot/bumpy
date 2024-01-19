@@ -8,11 +8,11 @@
 
 ## Installation
 
-    $ npm install bumpy -g
+    $ npm install @pirxpilot/bumpy -g
 
 ## Usage
 
-  Type `bumpy {release}`, where `{release}` is either `{major}`, `{minor}` or `{patch}`.  It'll do what you expect it to.
+  Type `bumpy {release}`, where `{release}` is either `{major}`, `{minor}`, `{patch}`, or a valid version number.  It'll do what you expect it to.
 
 ## Another one of these -- seriousy?
 
