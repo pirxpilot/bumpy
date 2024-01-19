@@ -9,11 +9,11 @@
   "author": "Stephen Mathieson <me@stephenmathieson.com>",
   "repository": "pirxpilot/bumpy",
   "dependencies": {
-    "home-dir": "~0.1.2",
-    "semver": "~2.2.1"
+    "home-dir": "~1",
+    "semver": "~7"
   },
   "devDependencies": {
-    "@pirxpilot/jshint": "^3.0.1"
+    "@pirxpilot/jshint": "~3"
   },
   "main": "bumpy.js",
   "bin": {

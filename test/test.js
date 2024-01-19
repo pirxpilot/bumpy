@@ -1,6 +1,7 @@
 
+var { describe, it, afterEach } = require('node:test');
+var assert = require('node:assert/strict');
 var bumpy = require('..');
-var assert = require('better-assert');
 var fs = require('fs');
 var path = require('path');
 var fixture = path.join.bind(path, __dirname, 'fixtures');
@@ -23,40 +24,40 @@ describe('bumpy', function () {
     bumpy.files = files;
   });
 
-  it('should bump patch numbers', function (done) {
+  it('should bump patch numbers', function (_, done) {
     bumpy(fixture(), 'patch', function (err) {
-      if (err) return done(err);
-      assert('0.0.1' === version('component.json'));
-      assert('0.0.1' === version('package.json'));
+      assert.ifError(err);
+      assert.equal(version('component.json'), '0.0.1');
+      assert.equal(version('package.json'), '0.0.1');
       done();
     });
   });
 
-  it('should bump minor numbers', function (done) {
+  it('should bump minor numbers', function (_, done) {
     bumpy(fixture(), 'minor', function (err) {
-      if (err) return done(err);
-      assert('0.1.0' === version('component.json'));
-      assert('0.1.0' === version('package.json'));
+      assert.ifError(err);
+      assert.equal(version('component.json'), '0.1.0');
+      assert.equal(version('package.json'), '0.1.0');
       done();
     });
   });
 
-  it('should bump major numbers', function (done) {
+  it('should bump major numbers', function (_, done) {
     bumpy(fixture(), 'major', function (err) {
-      if (err) return done(err);
-      assert('1.0.0' === version('component.json'));
-      assert('1.0.0' === version('package.json'));
+      assert.ifError(err);
+      assert.equal(version('component.json'), '1.0.0');
+      assert.equal(version('package.json'), '1.0.0');
       done();
     });
   });
 
-  it('should allow for clobbering defaults files', function (done) {
+  it('should allow for clobbering defaults files', function (_, done) {
     bumpy.files.push('foo.json');
     bumpy(fixture(), 'major', function (err) {
-      if (err) return done(err);
-      assert('1.0.0' === version('component.json'));
-      assert('1.0.0' === version('package.json'));
-      assert('1.0.0' === version('foo.json'));
+      assert.ifError(err);
+      assert.equal(version('component.json'), '1.0.0');
+      assert.equal(version('package.json'), '1.0.0');
+      assert.equal(version('foo.json'), '1.0.0');
       done();
     });
   });
