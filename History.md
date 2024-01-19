@@ -1,4 +1,11 @@
 
+1.0.0 / 2024-01-19
+==================
+
+ * add support for overwriting version number
+ * preserve newline at the end of modified files
+ * rename to @pirxpilot/bumpy
+
 0.2.0 / 2015-02-21
 ==================
 

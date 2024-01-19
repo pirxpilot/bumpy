@@ -1,6 +1,6 @@
 {
   "name": "@pirxpilot/bumpy",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Bump version numbers in your .json files",
   "keywords": [
     "version",
