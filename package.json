@@ -9,19 +9,22 @@
   "author": "Stephen Mathieson <me@stephenmathieson.com>",
   "repository": "pirxpilot/bumpy",
   "dependencies": {
-    "semver": "~2.2.1",
-    "home-dir": "~0.1.2"
+    "home-dir": "~0.1.2",
+    "semver": "~2.2.1"
   },
   "devDependencies": {
-    "better-assert": "~1.0.0",
-    "mocha": "^2.1.0"
+    "@pirxpilot/jshint": "^3.0.1"
   },
   "main": "bumpy.js",
   "bin": {
     "bumpy": "bin.js"
   },
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "make"
   },
+  "files": [
+    "bin.js",
+    "bumpy.js"
+  ],
   "license": "MIT"
 }
