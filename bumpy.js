@@ -1,8 +1,7 @@
-
-var semver = require('semver');
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
+const semver = require('semver');
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
 /**
  * Expose `bumpy`
@@ -20,10 +19,10 @@ module.exports = bumpy;
  */
 
 function bumpy(dir, release, cb) {
-  var current;
+  let current;
 
   function next(index) {
-    var file = bumpy.files[index];
+    let file = bumpy.files[index];
     if (!file) return cb(null, current);
     file = path.join(dir, file);
 
@@ -34,27 +33,31 @@ function bumpy(dir, release, cb) {
         return cb(err);
       }
 
-      var json = null;
+      let json = null;
       try {
         json = JSON.parse(data);
       } catch (err) {
         return cb(err);
       }
 
-      var version = json.version;
-      var bumped = semver.inc(version, release);
+      const version = json.version;
+      const bumped = semver.inc(version, release);
 
       if (!current) {
         current = bumped;
-      }
-      else if (current !== bumped) {
+      } else if (current !== bumped) {
         return cb({
-          message: util.format('Inconsistent versions:\n%s\t\%s\n%s\tin other files', bumped, file, current)
+          message: util.format(
+            'Inconsistent versions:\n%s\t%s\n%s\tin other files',
+            bumped,
+            file,
+            current
+          )
         });
       }
 
       json.version = bumped;
-      var str = JSON.stringify(json, null, 2);
+      const str = JSON.stringify(json, null, 2);
       fs.writeFile(file, str, function (err) {
         if (err) return cb(err);
         next(index + 1);

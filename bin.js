@@ -1,39 +1,45 @@
 #!/usr/bin/env node
 
-var bumpy = require('./bumpy');
-var path = require('path');
-var home = require('home-dir').directory;
-var fs = require('fs');
+const bumpy = require('./bumpy');
+const path = require('path');
+const home = require('home-dir').directory;
+const fs = require('fs');
 
-var releases = [ 'major', 'minor', 'patch' ];
-var release = process.argv[2];
-var ignore = '--ignorerc' === process.argv[3] || '-i' === process.argv[3];
+const releases = ['major', 'minor', 'patch'];
+const release = process.argv[2];
+const ignore = '--ignorerc' === process.argv[3] || '-i' === process.argv[3];
 
 process.title = 'bumpy';
 
-if ('--help' === release || '-h' === release) return usage();
-if ('--version' === release || '-v' === release) return version();
+main();
 
-if (!~releases.indexOf(release)) {
-  return error([
-    'Invalid or missing release.  Must be one of the following:',
-    '  ' + releases.join(', ')
-  ].join('\n'));
-}
+function main() {
+  if ('--help' === release || '-h' === release) return usage();
+  if ('--version' === release || '-v' === release) return version();
 
-// config file support
-if (!ignore) {
-  try {
-    var rc = path.join(home, '.bumpyrc');
-    var data = fs.readFileSync(rc);
-    var json = JSON.parse(data);
-    var files = json.files;
-    if (files && files.length) {
-      bumpy.files = files;
-    }
-  } catch (err) {
-    if ('ENOENT' !== err.code) {
-      return error(err.message);
+  if (!~releases.indexOf(release)) {
+    return error(
+      [
+        'Invalid or missing release.  Must be one of the following:',
+        '  ' + releases.join(', ')
+      ].join('\n')
+    );
+  }
+
+  // config file support
+  if (!ignore) {
+    try {
+      const rc = path.join(home, '.bumpyrc');
+      const data = fs.readFileSync(rc);
+      const json = JSON.parse(data);
+      const files = json.files;
+      if (files && files.length) {
+        bumpy.files = files;
+      }
+    } catch (err) {
+      if ('ENOENT' !== err.code) {
+        return error(err.message);
+      }
     }
   }
 }
@@ -42,7 +48,6 @@ bumpy(process.cwd(), release, function (err, version) {
   if (err) return error(err.message);
   if (version) console.log(version);
 });
-
 
 /**
  * Output the given error `msg`
@@ -58,23 +63,25 @@ function error(msg) {
  */
 
 function usage() {
-  console.log([
-    '',
-    '  Usage: bumpy <release> [options]',
-    '',
-    '  Releases:',
-    '',
-    '    - major',
-    '    - minor',
-    '    - patch',
-    '',
-    '  Options:',
-    '',
-    '    -h, --help           output usage information',
-    '    -V, --version        output the version number',
-    '    -i, --ignore         ignore settings in ~/.bumpyrc',
-    ''
-  ].join('\n'));
+  console.log(
+    [
+      '',
+      '  Usage: bumpy <release> [options]',
+      '',
+      '  Releases:',
+      '',
+      '    - major',
+      '    - minor',
+      '    - patch',
+      '',
+      '  Options:',
+      '',
+      '    -h, --help           output usage information',
+      '    -V, --version        output the version number',
+      '    -i, --ignore         ignore settings in ~/.bumpyrc',
+      ''
+    ].join('\n')
+  );
   process.exit(0);
 }
 

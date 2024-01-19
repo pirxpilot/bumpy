@@ -1,24 +1,23 @@
+const { describe, it, afterEach } = require('node:test');
+const assert = require('node:assert/strict');
+const bumpy = require('..');
+const fs = require('fs');
+const path = require('path');
+const fixture = path.join.bind(path, __dirname, 'fixtures');
+const read = fs.readFileSync;
 
-var { describe, it, afterEach } = require('node:test');
-var assert = require('node:assert/strict');
-var bumpy = require('..');
-var fs = require('fs');
-var path = require('path');
-var fixture = path.join.bind(path, __dirname, 'fixtures');
-var read = fs.readFileSync;
-
-var originals = {
+const originals = {
   'component.json': read(fixture('component.json')),
   'package.json': read(fixture('package.json')),
   'foo.json': read(fixture('foo.json'))
 };
 
-var files = bumpy.files;
+const files = bumpy.files;
 
 describe('bumpy', function () {
   // reset
   afterEach(function () {
-    for (var file in originals) {
+    for (const file in originals) {
       fs.writeFileSync(fixture(file), originals[file]);
     }
     bumpy.files = files;
