@@ -7,13 +7,15 @@
     "semver"
   ],
   "author": "Stephen Mathieson <me@stephenmathieson.com>",
-  "repository": "pirxpilot/bumpy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pirxpilot/bumpy.git"
+  },
   "dependencies": {
-    "home-dir": "~1",
     "semver": "~7"
   },
   "devDependencies": {
-    "@pirxpilot/jshint": "~3"
+    "@biomejs/biome": "^1.9.4"
   },
   "main": "bumpy.js",
   "bin": {

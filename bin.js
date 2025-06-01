@@ -2,7 +2,7 @@
 
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { directory: home } = require('home-dir');
+const { homedir } = require('node:os');
 const semver = require('semver');
 
 const bumpy = require('./bumpy');
@@ -40,11 +40,11 @@ async function main(release) {
   // config file support
   if (!ignore) {
     try {
-      const rc = path.join(home, '.bumpyrc');
+      const rc = path.join(homedir(), '.bumpyrc');
       const data = await fs.readFile(rc);
       const json = JSON.parse(data);
       const files = json.files;
-      if (files && files.length) {
+      if (files?.length) {
         bumpy.files = files;
       }
     } catch (err) {
@@ -55,7 +55,6 @@ async function main(release) {
   }
   return bumpy(process.cwd(), release, overwrite);
 }
-
 
 /**
  * Output the given error `msg`
