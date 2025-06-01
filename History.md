@@ -1,4 +1,10 @@
 
+1.0.1 / 2025-06-01
+==================
+
+ * use `os.homedir()` instead of `home-dir` module
+ * use `biome` as a linter and formatter
+
 1.0.0 / 2024-01-19
 ==================
 
