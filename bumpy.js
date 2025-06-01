@@ -37,12 +37,7 @@ async function bumpy(dir, release, overwrite) {
     if (!current) {
       current = bumped;
     } else if (current !== bumped) {
-      const message = util.format(
-        'Inconsistent versions:\n%s\t%s\n%s\tin other files',
-        bumped,
-        file,
-        current
-      );
+      const message = util.format('Inconsistent versions:\n%s\t%s\n%s\tin other files', bumped, file, current);
       throw new Error(message);
     }
     json.version = bumped;
@@ -74,7 +69,4 @@ async function bumpy(dir, release, overwrite) {
  * Default files.
  */
 
-bumpy.files = [
-  'package.json',
-  'component.json'
-];
+bumpy.files = ['package.json', 'component.json'];

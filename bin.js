@@ -44,7 +44,7 @@ async function main(release) {
       const data = await fs.readFile(rc);
       const json = JSON.parse(data);
       const files = json.files;
-      if (files && files.length) {
+      if (files?.length) {
         bumpy.files = files;
       }
     } catch (err) {
@@ -55,7 +55,6 @@ async function main(release) {
   }
   return bumpy(process.cwd(), release, overwrite);
 }
-
 
 /**
  * Output the given error `msg`

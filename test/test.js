@@ -1,8 +1,8 @@
 const { describe, it, afterEach } = require('node:test');
 const assert = require('node:assert/strict');
 const bumpy = require('..');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const fixture = path.join.bind(path, __dirname, 'fixtures');
 const read = fs.readFileSync;
 
@@ -17,9 +17,7 @@ const files = bumpy.files;
 describe('bumpy', async function () {
   // reset
   afterEach(async function () {
-    await Promise.all(Object.entries(originals).map(
-      ([file, data]) => fs.promises.writeFile(fixture(file), data)
-    ));
+    await Promise.all(Object.entries(originals).map(([file, data]) => fs.promises.writeFile(fixture(file), data)));
     bumpy.files = files;
   });
 
