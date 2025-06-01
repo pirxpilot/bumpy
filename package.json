@@ -12,7 +12,6 @@
     "url": "git+https://github.com/pirxpilot/bumpy.git"
   },
   "dependencies": {
-    "home-dir": "~1",
     "semver": "~7"
   },
   "devDependencies": {
