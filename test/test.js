@@ -1,9 +1,9 @@
-const test = require('node:test');
-const bumpy = require('..');
-const fs = require('node:fs');
-const path = require('node:path');
-const fixture = path.join.bind(path, __dirname, 'fixtures');
-const read = fs.readFileSync;
+import { readFileSync as read, writeFileSync as write } from 'node:fs';
+import path from 'node:path';
+import test from 'node:test';
+import bumpy from '../bumpy.js';
+
+const fixture = path.join.bind(path, import.meta.dirname, 'fixtures');
 
 const originals = {
   'component.json': read(fixture('component.json')),
@@ -15,8 +15,8 @@ const files = bumpy.files;
 
 test('bumpy', async t => {
   // reset
-  t.afterEach(async () => {
-    await Promise.all(Object.entries(originals).map(([file, data]) => fs.promises.writeFile(fixture(file), data)));
+  t.afterEach(() => {
+    Object.entries(originals).forEach(([file, data]) => write(fixture(file), data));
     bumpy.files = files;
   });
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require('node:fs/promises');
-const path = require('node:path');
-const { homedir } = require('node:os');
-const semver = require('semver');
-
-const bumpy = require('./bumpy');
+import fs from 'node:fs/promises';
+import { homedir } from 'node:os';
+import path from 'node:path';
+import semver from 'semver';
+import bumpy from './bumpy.js';
+import packageJSON from './package.json' with { type: 'json' };
 
 const releases = ['major', 'minor', 'patch'];
 const release = process.argv[2];
@@ -97,6 +97,6 @@ function usage() {
  */
 
 function version() {
-  console.log(`v${require('./package.json').version}`);
+  console.log(`v${packageJSON.version}`);
   process.exit(0);
 }

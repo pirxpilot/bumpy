@@ -1,10 +1,7 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
-const util = require('node:util');
-
-const semver = require('semver');
-
-module.exports = bumpy;
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import util from 'node:util';
+import semver from 'semver';
 
 /**
  * Bump the version of the package in `dir`
@@ -13,7 +10,7 @@ module.exports = bumpy;
  * @param {String} dir
  * @param {String} release
  */
-async function bumpy(dir, release, overwrite) {
+export default async function bumpy(dir, release, overwrite) {
   let current;
 
   const result = await Promise.allSettled(bumpy.files.map(read));
