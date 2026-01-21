@@ -1,4 +1,12 @@
 
+2.0.0 / 2026-01-21
+==================
+
+ * transition to ESM format
+ * modernize tests
+ * upgrade `biome` to 2.3.11
+ * replace `yarn` with `pnpm`
+
 1.0.1 / 2025-06-01
 ==================
 
