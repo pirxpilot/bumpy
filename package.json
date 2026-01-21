@@ -11,13 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/pirxpilot/bumpy.git"
   },
+  "type": "module",
   "dependencies": {
     "semver": "~7"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "2.3.11"
   },
-  "main": "bumpy.js",
+  "exports": "./bumpy.js",
   "bin": {
     "bumpy": "bin.js"
   },

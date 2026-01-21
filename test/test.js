@@ -1,10 +1,9 @@
-const { describe, it, afterEach } = require('node:test');
-const assert = require('node:assert/strict');
-const bumpy = require('..');
-const fs = require('node:fs');
-const path = require('node:path');
-const fixture = path.join.bind(path, __dirname, 'fixtures');
-const read = fs.readFileSync;
+import { readFileSync as read, writeFileSync as write } from 'node:fs';
+import path from 'node:path';
+import test from 'node:test';
+import bumpy from '../bumpy.js';
+
+const fixture = path.join.bind(path, import.meta.dirname, 'fixtures');
 
 const originals = {
   'component.json': read(fixture('component.json')),
@@ -14,43 +13,43 @@ const originals = {
 
 const files = bumpy.files;
 
-describe('bumpy', async function () {
+test('bumpy', async t => {
   // reset
-  afterEach(async function () {
-    await Promise.all(Object.entries(originals).map(([file, data]) => fs.promises.writeFile(fixture(file), data)));
+  t.afterEach(() => {
+    Object.entries(originals).forEach(([file, data]) => write(fixture(file), data));
     bumpy.files = files;
   });
 
-  await it('should bump patch numbers', async function () {
+  await t.test('should bump patch numbers', async t => {
     await bumpy(fixture(), 'patch');
-    assert.equal(version('component.json'), '0.0.1');
-    assert.equal(version('package.json'), '0.0.1');
+    t.assert.equal(version('component.json'), '0.0.1');
+    t.assert.equal(version('package.json'), '0.0.1');
   });
 
-  await it('should bump minor numbers', async function () {
+  await t.test('should bump minor numbers', async t => {
     await bumpy(fixture(), 'minor');
-    assert.equal(version('component.json'), '0.1.0');
-    assert.equal(version('package.json'), '0.1.0');
+    t.assert.equal(version('component.json'), '0.1.0');
+    t.assert.equal(version('package.json'), '0.1.0');
   });
 
-  await it('should bump major numbers', async function () {
+  await t.test('should bump major numbers', async t => {
     await bumpy(fixture(), 'major');
-    assert.equal(version('component.json'), '1.0.0');
-    assert.equal(version('package.json'), '1.0.0');
+    t.assert.equal(version('component.json'), '1.0.0');
+    t.assert.equal(version('package.json'), '1.0.0');
   });
 
-  await it('should allow overwriting version number', async function () {
+  await t.test('should allow overwriting version number', async t => {
     await bumpy(fixture(), false, '4.2.1');
-    assert.equal(version('component.json'), '4.2.1');
-    assert.equal(version('package.json'), '4.2.1');
+    t.assert.equal(version('component.json'), '4.2.1');
+    t.assert.equal(version('package.json'), '4.2.1');
   });
 
-  await it('should allow for clobbering defaults files', async function () {
+  await t.test('should allow for clobbering defaults files', async t => {
     bumpy.files.push('foo.json');
     await bumpy(fixture(), 'major');
-    assert.equal(version('component.json'), '1.0.0');
-    assert.equal(version('package.json'), '1.0.0');
-    assert.equal(version('foo.json'), '1.0.0');
+    t.assert.equal(version('component.json'), '1.0.0');
+    t.assert.equal(version('package.json'), '1.0.0');
+    t.assert.equal(version('foo.json'), '1.0.0');
   });
 });
 
