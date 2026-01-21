@@ -28,7 +28,7 @@ async function main(release) {
       return error(
         [
           'Invalid or missing release.  Must be one of the following:',
-          '  ' + releases.join(', '),
+          `  ${releases.join(', ')}`,
           'Or a valid version number.'
         ].join('\n')
       );
@@ -97,6 +97,6 @@ function usage() {
  */
 
 function version() {
-  console.log('v' + require('./package.json').version);
+  console.log(`v${require('./package.json').version}`);
   process.exit(0);
 }
